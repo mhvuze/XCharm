@@ -20,11 +20,10 @@ namespace XCharm
             }
 
             // Initialize
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.WriteLine("XCharm by MHVuze\n");
 
             string input = args[0];
-            string output = Path.GetDirectoryName(input) + "\\" + "CHARM.csv";
+            string output = "CHARM.csv";
             int charNo;
             long input_size = new FileInfo(input).Length;
 
@@ -93,6 +92,8 @@ namespace XCharm
                     int slot = reader.ReadByte();
                     reader.ReadBytes(0x13);         // Skip rest
 
+                    Console.WriteLine(type + ", " + slot + ", " + skl1 + ", " + skl1_pt + ", " + skl2 + ", " + skl2_pt);
+
                     // Assign IDs with strings
                     string type_name;
                     string skl1_name;
@@ -108,8 +109,6 @@ namespace XCharm
                         charm = type_name + "," + slot + "," + skl1_name + "," + skl1_pt;
 
                     csv.WriteLine(charm);
-
-                    Console.WriteLine(type_name + ", " + slot + ", " + skl1_name + ", " + skl1_pt + ", " + skl2_name + ", " + skl2_pt);
                 }
                 else
                     reader.ReadBytes(0x23);
@@ -120,7 +119,7 @@ namespace XCharm
             reader.Close();
             save_ms.Close();
 
-            Console.WriteLine("INFO: Finished. Use CHARM.csv with masax' GANSIMU.");
+            Console.WriteLine("\nINFO: Finished. Use CHARM.csv with masax' GANSIMU.");
         }
     }
 }
