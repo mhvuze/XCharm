@@ -24,6 +24,7 @@ namespace XCharm
 
             string input = args[0];
             string output = "CHARM.csv";
+            string output_dex = "MyTalisman.csv";
             int charNo;
             long input_size = new FileInfo(input).Length;
 
@@ -51,6 +52,8 @@ namespace XCharm
             
             if (File.Exists(output))
                 File.Delete(output);
+            if (File.Exists(output_dex))
+                File.Delete(output_dex);
 
             // Process input file
             byte[] save = File.ReadAllBytes(input);
@@ -75,6 +78,7 @@ namespace XCharm
             // Read equipbox
             IDTables.FillTables();
             StreamWriter csv = new StreamWriter(output, false, Encoding.GetEncoding(932));
+            StreamWriter csv_dex = new StreamWriter(output_dex, false, Encoding.UTF8);
             reader.BaseStream.Seek(offset, SeekOrigin.Begin);
 
             for (int i = 0; i < 1400; i++)
@@ -94,6 +98,7 @@ namespace XCharm
 
                     Console.WriteLine(type + ", " + slot + ", " + skl1 + ", " + skl1_pt + ", " + skl2 + ", " + skl2_pt);
 
+                    // MASAX CSV
                     // Assign IDs with strings
                     string type_name;
                     string skl1_name;
@@ -109,6 +114,19 @@ namespace XCharm
                         charm = type_name + "," + slot + "," + skl1_name + "," + skl1_pt;
 
                     csv.WriteLine(charm);
+
+                    // PINGS DEX CSV
+                    // Account for Dex peculiarities
+                    if (skl1 == 148)
+                        skl1 = 1;
+                    if (skl2 == 148)
+                        skl2 = 1;
+                    if (skl2 == 0)
+                        skl2 = -1;
+
+                    string charm_dex = type + "," + slot + "," + (skl1 + 1) + "," + skl1_pt + "," + (skl2 + 1) + "," + skl2_pt + ",";
+
+                    csv_dex.WriteLine(charm_dex);
                 }
                 else
                     reader.ReadBytes(0x23);
@@ -116,10 +134,11 @@ namespace XCharm
 
             // Cleaning
             csv.Close();
+            csv_dex.Close();
             reader.Close();
             save_ms.Close();
 
-            Console.WriteLine("\nINFO: Finished. Use CHARM.csv with masax' GANSIMU.");
+            Console.WriteLine("\nINFO: Finished!");
         }
     }
 }
