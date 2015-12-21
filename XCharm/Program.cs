@@ -91,8 +91,8 @@ namespace XCharm
                     reader.ReadBytes(0x0A);         // Skip nullspace
                     int skl1 = reader.ReadByte();
                     int skl2 = reader.ReadByte();
-                    int skl1_pt = reader.ReadByte();
-                    int skl2_pt = reader.ReadByte();
+                    sbyte skl1_pt = reader.ReadSByte();
+                    sbyte skl2_pt = reader.ReadSByte();
                     int slot = reader.ReadByte();
                     reader.ReadBytes(0x13);         // Skip rest
 
@@ -122,7 +122,7 @@ namespace XCharm
                     if (skl2 == 148)
                         skl2 = 1;
                     if (skl2 == 0)
-                        skl2 = -1;
+                        skl2 = -2;
 
                     string charm_dex = type + "," + slot + "," + (skl1 + 1) + "," + skl1_pt + "," + (skl2 + 1) + "," + skl2_pt + ",";
 
