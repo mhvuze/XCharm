@@ -26,9 +26,16 @@ namespace XCharm
             string output = "CHARM.csv";
             string output_dex = "MyTalisman.csv";
             int charNo;
-            long input_size = new FileInfo(input).Length;
 
             // Handle input, output and arguments
+            if (!File.Exists(input))
+            {
+                Console.WriteLine("ERROR: Input file not found.");
+                return;
+            }
+
+            long input_size = new FileInfo(input).Length;
+
             bool parse = int.TryParse(args[1], out charNo);
             if (parse == false)
             {
@@ -37,7 +44,7 @@ namespace XCharm
                 return;
             }
 
-            if (charNo > 3 || charNo < 0)
+            if (charNo > 3 || charNo < 1)
             {
                 Console.WriteLine("ERROR: Invalid character slot specified.");
                 Console.WriteLine("Only numbers between 1 and 3 are valid.");
@@ -56,6 +63,7 @@ namespace XCharm
                 File.Delete(output_dex);
 
             // Process input file
+
             byte[] save = File.ReadAllBytes(input);
             MemoryStream save_ms = new MemoryStream(save);
             BinaryReader reader = new BinaryReader(save_ms);

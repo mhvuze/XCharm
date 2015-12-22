@@ -15,4 +15,4 @@ i.e. `XCharm system 1` will read all charms from your first character slot.
 
 Thanks to svanheulen for his [research](https://github.com/svanheulen/mhff/wiki/MHX-system-Format) which saved me some trouble.
 
-*Note:* A homebrew-enabled console is required to dump your savedata.
+*Note:* XCharm only processes decrypted MHX savedata. A homebrew-enabled console is required.
