@@ -11,6 +11,9 @@ namespace XCharm
     {
         static void Main(string[] args)
         {
+            // Print header
+            Console.WriteLine("XCharm by MHVuze\n");
+
             // Handle argument count
             if (args.Length < 2)
             {
@@ -20,11 +23,11 @@ namespace XCharm
             }
 
             // Initialize
-            Console.WriteLine("XCharm by MHVuze\n");
 
             string input = args[0];
             string output = "CHARM.csv";
             string output_dex = "MyTalisman.csv";
+            string output_ass = "mycharms.txt";
             int charNo;
 
             // Handle input, output and arguments
@@ -61,9 +64,10 @@ namespace XCharm
                 File.Delete(output);
             if (File.Exists(output_dex))
                 File.Delete(output_dex);
+            if (File.Exists(output_ass))
+                File.Delete(output_ass);
 
             // Process input file
-
             byte[] save = File.ReadAllBytes(input);
             MemoryStream save_ms = new MemoryStream(save);
             BinaryReader reader = new BinaryReader(save_ms);
@@ -87,6 +91,7 @@ namespace XCharm
             IDTables.FillTables();
             StreamWriter csv = new StreamWriter(output, false, Encoding.GetEncoding(932));
             StreamWriter csv_dex = new StreamWriter(output_dex, false, Encoding.UTF8);
+            StreamWriter csv_ass = new StreamWriter(output_ass, false, Encoding.UTF8);
             reader.BaseStream.Seek(offset, SeekOrigin.Begin);
 
             for (int i = 0; i < 1400; i++)
@@ -106,7 +111,6 @@ namespace XCharm
 
                     Console.WriteLine(type + ", " + slot + ", " + skl1 + ", " + skl1_pt + ", " + skl2 + ", " + skl2_pt);
 
-                    // MASAX CSV
                     // Assign IDs with strings
                     string type_name;
                     string skl1_name;
@@ -115,13 +119,21 @@ namespace XCharm
                     IDTables.skl_tbl.TryGetValue(skl1, out skl1_name);
                     IDTables.skl_tbl.TryGetValue(skl2, out skl2_name);
 
+                    // MASAX CSV
                     string charm = type_name + "," + slot + "," + skl1_name + "," + skl1_pt + "," + skl2_name + "," + skl2_pt;
-                    
-                    // Account for null skills / pts
+
                     if (skl2 == 0)
                         charm = type_name + "," + slot + "," + skl1_name + "," + skl1_pt;
 
                     csv.WriteLine(charm);
+
+                    // ATHENAS A.S.S. CSV
+                    string charm_ass = slot + "," + skl1_name + "," + skl1_pt + "," + skl2_name + "," + skl2_pt;
+
+                    if (skl2 == 0)
+                        charm_ass = slot + "," + skl1_name + "," + skl1_pt + "," + ",";
+
+                    csv_ass.WriteLine(charm_ass);
 
                     // PINGS DEX CSV
                     // Account for Dex peculiarities
@@ -143,6 +155,7 @@ namespace XCharm
             // Cleaning
             csv.Close();
             csv_dex.Close();
+            csv_ass.Close();
             reader.Close();
             save_ms.Close();
 
