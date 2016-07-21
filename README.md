@@ -1,5 +1,5 @@
 # XCharm
-Simple C# tool for creating comma-seperated charm sheets from MHX savedata for use with various applications.
+Simple C# tool for creating comma-seperated charm sheets from MHX and MHGen savedata for use with various applications.
 
 Save yourself the hassle of manually entering all your precious charms and get right into mix set creation!
 
@@ -16,4 +16,4 @@ i.e. `XCharm system 1` will read all charms from your first character slot.
 
 Thanks to svanheulen for his [research](https://github.com/svanheulen/mhff/wiki/MHX-system-Format) which saved me some trouble.
 
-*Note:* XCharm only processes decrypted MHX savedata. A homebrew-enabled console is required.
+*Note:* XCharm only processes decrypted MHX/MHGen savedata. A homebrew-enabled console is required.
