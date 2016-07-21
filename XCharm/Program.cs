@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace XCharm
@@ -15,51 +12,28 @@ namespace XCharm
             Console.WriteLine("XCharm by MHVuze\n");
 
             // Handle argument count
-            if (args.Length < 2)
-            {
-                Console.WriteLine("ERROR: Not enough arguments specified.");
-                Console.WriteLine("Use XCharm input charslot");
-                return;
-            }
+            if (args.Length < 2) { Console.WriteLine("ERROR: Not enough arguments specified.\nUse XCharm input charslot"); return; }
 
             // Initialize
-
             string input = args[0];
             string output = "CHARM.csv";
             string output_dex = "MyTalisman.csv";
             string output_ass = "mycharms.txt";
             int charNo;
 
-            // Handle input, output and arguments
-            if (!File.Exists(input))
-            {
-                Console.WriteLine("ERROR: Input file not found.");
-                return;
-            }
-
-            long input_size = new FileInfo(input).Length;
-
+            // Parse char number
             bool parse = int.TryParse(args[1], out charNo);
-            if (parse == false)
-            {
-                Console.WriteLine("ERROR: Invalid value supplied for charslot.");
-                Console.WriteLine("Only numbers between 1 and 3 are valid.");
-                return;
-            }
+            if (parse == false || charNo > 3 || charNo < 1) { Console.WriteLine("ERROR: Invalid value supplied for charslot.\nOnly numbers between 1 and 3 are valid."); return; }
 
-            if (charNo > 3 || charNo < 1)
-            {
-                Console.WriteLine("ERROR: Invalid character slot specified.");
-                Console.WriteLine("Only numbers between 1 and 3 are valid.");
-                return;
-            }
+            // Check input file for validity
+            if (!File.Exists(input)) { Console.WriteLine("ERROR: Input file not found."); return; }
+            long input_size = new FileInfo(input).Length;           
 
-            if (input_size != 0x389B2B)
-            {
-                Console.WriteLine("ERROR: Invalid filesize. Supply MHX system or system_backup.");
-                return;
-            }
-            
+            if (input_size == 0x389B2B) { Console.WriteLine("INFO: MHX system file supplied.\n"); }
+            else if (input_size == 0x3D0C2F) { Console.WriteLine("INFO: MHGen system file supplied.\n"); }
+            if (input_size !=  0x389B2B && input_size != 0x3D0C2F) { Console.WriteLine("ERROR: Supplied file is neither a valid MHX nor MHGen system file."); return; }
+
+            // Clean up existing output            
             if (File.Exists(output))
                 File.Delete(output);
             if (File.Exists(output_dex))
@@ -68,9 +42,7 @@ namespace XCharm
                 File.Delete(output_ass);
 
             // Process input file
-            byte[] save = File.ReadAllBytes(input);
-            MemoryStream save_ms = new MemoryStream(save);
-            BinaryReader reader = new BinaryReader(save_ms);
+            BinaryReader reader = new BinaryReader(File.OpenRead(input));
 
             // Read char offsets
             reader.BaseStream.Seek(0x10, SeekOrigin.Begin);
@@ -157,7 +129,6 @@ namespace XCharm
             csv_dex.Close();
             csv_ass.Close();
             reader.Close();
-            save_ms.Close();
 
             Console.WriteLine("\nINFO: Finished!");
         }
